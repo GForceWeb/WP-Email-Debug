@@ -6,11 +6,11 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       http://example.com
+ * @link       http://g-force.net
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    WP_Email_Debug
+ * @subpackage WP_Email_Debug/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
- * @author     Your Name <email@example.com>
+ * @package    WP_Email_Debug
+ * @subpackage WP_Email_Debug/includes
+ * @author     Grant Derepas <grant@g-force.net>
  */
-class Plugin_Name_i18n {
+class WP_Email_Debug_i18n {
 
 	/**
 	 * The domain specified for this plugin.

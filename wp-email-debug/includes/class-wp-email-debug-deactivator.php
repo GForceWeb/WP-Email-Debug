@@ -3,11 +3,11 @@
 /**
  * Fired during plugin deactivation
  *
- * @link       http://example.com
+ * @link       http://g-force.net
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    WP_Email_Debug
+ * @subpackage WP_Email_Debug/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
- * @author     Your Name <email@example.com>
+ * @package    WP_Email_Debug
+ * @subpackage WP_Email_Debug/includes
+ * @author     Grant Derepas <grant@g-force.net>
  */
-class Plugin_Name_Deactivator {
+class WP_Email_Debug_Deactivator {
 
 	/**
 	 * Short Description. (use period)
