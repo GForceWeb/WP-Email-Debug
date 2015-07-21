@@ -1,41 +1,26 @@
 === WP Email Debug ===
-Contributors: dr_scythe
+Contributors: dr_scythe, jarred-kennedy
 Donate link: http://g-force.net/donate/
-Tags: comments, spam
+Tags: email, debug, debugging, mail
 Requires at least: 3.0.1
 Tested up to: 4.3
 Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A simple plugin that provides options to help troubleshoot email issues in WordPress installs
+Never accidentally send users emails from your testing sites again!
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+This plugin makes it safe and easy to work with email in your testing environments. When enabled the plugin catches any instance of wp_mail and redirects the email to your chosen email address.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+Key Features
 
-A few notes about the sections above:
+*   Set a custom email address target to redirect emails to
+*   Emails intercepted will have [Debug] added to the subject line to make them identifyable in your inbox
+*   Interception rules can be limited by plugin allowing you to debug a specific plugin on your live site without affecting other operations
+*   Notice in the WP Admin Bar when enabled.
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
-
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
-
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
 
 == Installation ==
 
@@ -45,13 +30,9 @@ you put the stable version, in order to eliminate any doubt.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Will this intercept all emails sent from WordPress? =
 
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
+Generally speaking, Yes, but. This plugin catches all emails sent using the wp_mail function. Best practice specifies that plugins should use this function to send email but it is possible that developers could send email using another method in which case this plugin won't catch it.
 
 == Screenshots ==
 
@@ -64,19 +45,17 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 == Changelog ==
 
 = 1.0 =
-* A change since the previous version.
-* Another change.
+* Initial Release
+* Added plugin specific filters
+* Added Admin Bar Notification
+* Added Plugin Meta / Icon / Banner
 
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
+= 0.1 =
+* Built core filter functionality
 
-== Upgrade Notice ==
 
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
 
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
+
 
 == Arbitrary section ==
 

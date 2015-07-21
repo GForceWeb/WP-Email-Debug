@@ -1,75 +1,101 @@
 <?php
-
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- *
- * @link              http://g-force.net
- * @since             1.0.0
- * @package           WP_Email_Debug
- *
- * @wordpress-plugin
- * Plugin Name:       WP Email Debug
- * Plugin URI:        http://grantderepas.com/plugins/wp-email-debug/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
- * Author:            Grant Derepas
- * Author URI:        http://grantderepas.com/
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wp-email-debug
- * Domain Path:       /languages
+ * Plugin Name: WP E-Mail Debug
+ * Description: Direct email sent from WordPress or specific plugins to a specified email address.
+ * Version: 1.0.0
+ * Author: Grant Derepas
+ * Author URI: https://www.g-force.net
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if( !defined( 'ABSPATH' ) ) {
+  exit();
 }
 
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-email-debug-activator.php
- */
-function activate_wp_email_debug() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-email-debug-activator.php';
-	WP_Email_Debug_Activator::activate();
+if( !class_exists( 'WPMailDebugger' ) ) {
+
+  final class WPMailDebugger {
+
+    private static $instance;
+
+    public static function instantiate() {
+  		if( !isset( self::$instance ) && !self::$instance instanceof WPMailDebugger ) {
+  			self::$instance = new WPMailDebugger;
+  			self::$instance->includes();
+  		}
+  		return self::$instance;
+    }
+
+    public function includes() {
+
+      if( !defined( 'WPMDBUG_PATH' ) ) {
+			  define( 'WPMDBUG_PATH', plugin_dir_path( __FILE__ ) );
+		  }
+
+      require_once WPMDBUG_PATH . 'hooks.php';
+    }
+
+    /**
+     *Returns true if the debugger is enabled in the plugin's settings.
+     *@since 1.0.0
+     *@return boolean
+     */
+    public static function doEnforce() {
+      $enforce = get_option('WPMDBUG_enabled', FALSE);
+      if ($enforce) {
+        return TRUE;
+      } else {
+        return FALSE;
+      }
+    }
+
+    /**
+     *Returns true if a switch of the email address should be performed, else false.
+     *@since 1.0.0
+     *@return boolean
+     */
+    public static function contextualSwitch() {
+      $scope = get_option("WPMDBUG_plugins", array());
+
+      if (is_array($scope) && count($scope) > 0) {
+        // A switch depends on selected plugins
+        $trace = debug_backtrace();
+
+        foreach($scope as $sco) {
+          $plugin_filename = str_replace('\\', '/', WP_PLUGIN_DIR . '/' . $sco);
+
+          foreach($trace as $call) {
+            if (isset($call['file'])) {
+              if ($plugin_filename == str_replace('\\', '/', $call['file']) || stripos($call['file'], dirname($plugin_filename)) !== FALSE) {
+                return TRUE;
+              }
+            }
+          }
+        }
+        return FALSE;
+      } else {
+        return TRUE;
+      }
+    }
+
+    public static function filterEmail( $args ) {
+      $to_address = get_option('WPMDBUG_email', get_bloginfo('admin_email'));
+      $original = $args['to'];
+
+      if (self::contextualSwitch()) {
+        $args['to'] = $to_address;
+        $args['subject'] = '[DEBUG] ' . $args['subject'];
+        $args['message'] = "Originally intended to be sent to " . $original . "\n" . $args['message'];
+      }
+
+      return $args;
+    }
+
+  }
+
+  function WPMDBUG_start() {
+    return WPMailDebugger::instantiate();
+  }
+
+  WPMDBUG_start();
+
 }
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-email-debug-deactivator.php
- */
-function deactivate_wp_email_debug() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-email-debug-deactivator.php';
-	WP_Email_Debug_Deactivator::deactivate();
-}
-
-register_activation_hook( __FILE__, 'activate_wp_email_debug' );
-register_deactivation_hook( __FILE__, 'deactivate_wp_email_debug' );
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wp-email-debug.php';
-
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
- */
-function run_wp_email_debug() {
-
-	$plugin = new WP_Email_Debug();
-	$plugin->run();
-
-}
-run_wp_email_debug();
