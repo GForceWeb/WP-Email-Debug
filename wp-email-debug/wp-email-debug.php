@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WP E-Mail Debug
- * Description: Direct email sent from WordPress or specific plugins to a specified email address.
+ * Description: Never accidentally send users emails from your testing sites again!
  * Version: 1.0.0
  * Author: Grant Derepas
  * Author URI: https://www.g-force.net
