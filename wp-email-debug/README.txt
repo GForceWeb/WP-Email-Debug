@@ -1,6 +1,6 @@
 === WP Email Debug ===
 Contributors: dr_scythe, jarred-kennedy
-Donate link: http://g-force.net/donate/
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=56VAQGWSU2VRL
 Tags: email, debug, debugging, mail
 Requires at least: 3.0.1
 Tested up to: 4.3
@@ -21,6 +21,10 @@ Key Features
 *   Interception rules can be limited by plugin allowing you to debug a specific plugin on your live site without affecting other operations
 *   Notice in the WP Admin Bar when enabled.
 
+= For Bugs Reports or to contribute =
+
+Please visit our public [GitHub Repo](https://github.com/GForceWeb/WP-Email-Debug/)
+
 
 == Installation ==
 
@@ -36,11 +40,7 @@ Generally speaking, Yes, but. This plugin catches all emails sent using the wp_m
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. WP EMail Debug Settings Screen
 
 == Changelog ==
 
