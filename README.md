@@ -1,6 +1,4 @@
-<snippet>
-  <content><![CDATA[
-# ${1:WP EMail Debug}
+# WP EMail Debug
 
 This WordPress plugin makes it safe and easy to work with email in your testing environments. When enabled the plugin catches any instance of wp_mail and redirects the email to your chosen email address.
 
@@ -30,7 +28,3 @@ Original Plugin Designed and Developed by [Grant Derepas](http://g-force.net) & 
 ## License
 
 GLPv2
-
-]]></content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
