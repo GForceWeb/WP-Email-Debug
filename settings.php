@@ -1,8 +1,8 @@
 <?php
-$scopes = get_option("WPMDBUG_plugins", array());
+$scopes = get_option('WPMDBUG_plugins', array());
 $scope = (is_array($scopes) && count($scopes) > 0);
 
-if ( !function_exists( 'get_plugins' ) ) {
+if (!function_exists('get_plugins')) {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 }
 
@@ -17,7 +17,7 @@ $plugins = get_plugins();
           <th scope="row">Enable E-Mail Debugging</strong></th>
           <td>
             <label>
-              <input type="checkbox" value="1" name="wpmdbug_enabled" <?php echo ( WPMailDebugger::doEnforce()) ? 'checked': ''; ?>/>
+              <input type="checkbox" value="1" name="wpmdbug_enabled" <?php echo (WPMailDebugger::doEnforce()) ? 'checked="checked"': ''; ?>/>
             </label>
           </td>
         </tr>
@@ -33,12 +33,12 @@ $plugins = get_plugins();
           <th scope="row">&nbsp;</strong></th>
           <td>
             <label>
-              <input type="radio" value="1" name="wpmdbug_scope" <?php echo ($scope) ? '': 'checked'; ?>/>
+              <input type="radio" value="1" name="wpmdbug_scope" <?php echo ($scope) ? '': 'checked="checked"'; ?>/>
               &nbsp;Redirect all e-mails sent through WordPress
             </label>
             <br/>
             <label>
-              <input type="radio" value="2" name="wpmdbug_scope" <?php echo ($scope) ? 'checked': ''; ?>/>
+              <input type="radio" value="2" name="wpmdbug_scope" <?php echo ($scope) ? 'checked="checked"': ''; ?>/>
               &nbsp;Limit to specific plugins
             </label>
           </td>
@@ -50,12 +50,12 @@ $plugins = get_plugins();
               <tbody>
                 <tr>
                   <th colspan="2">
-                    <input type="checkbox" id="selall" <?php echo (count($scopes) == count($plugins)) ? 'checked': ''; ?>/> Select All
+                    <input type="checkbox" id="selall" <?php echo (count($scopes) === count($plugins)) ? 'checked="checked"': ''; ?>/> Select All
                   </th>
                 </tr>
-                <?php foreach($plugins as $plugin => $pdata): if(stripos($plugin, 'wp-mail-debugger.php') !== FALSE){continue;} ?>
+                <?php foreach ($plugins as $plugin => $pdata): if (stripos($plugin, 'wp-mail-debugger.php') !== FALSE) {continue;} ?>
                   <tr>
-                    <td style="padding-top: 5px; padding-bottom: 5px;"><input type="checkbox" name="targetplugins[]" value="<?php echo $plugin; ?>" <?php echo ($scope && in_array($plugin, $scopes)) ? 'checked': ''; ?>/></td>
+                    <td style="padding-top: 5px; padding-bottom: 5px;"><input type="checkbox" name="targetplugins[]" value="<?php echo $plugin; ?>" <?php echo ($scope && in_array($plugin, $scopes)) ? 'checked="checked"': ''; ?>/></td>
                     <td style="padding-top: 5px; padding-bottom: 5px;"><?php echo $pdata['Name']; ?></td>
                   </tr>
                 <?php endforeach; ?>

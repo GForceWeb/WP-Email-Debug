@@ -8,27 +8,30 @@
  * Author URI: https://www.g-force.net
  */
 
-if( !defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
   exit();
 }
 
-if( !class_exists( 'WPMailDebugger' ) ) {
+if (!class_exists('WPMailDebugger')):
 
-  final class WPMailDebugger {
+  final class WPMailDebugger
+  {
 
     private static $instance;
 
-    public static function instantiate() {
-  		if( !isset( self::$instance ) && !self::$instance instanceof WPMailDebugger ) {
+    public static function instantiate()
+    {
+  		if (!isset(self::$instance) && !self::$instance instanceof WPMailDebugger) {
   			self::$instance = new WPMailDebugger;
   			self::$instance->includes();
   		}
   		return self::$instance;
     }
 
-    public function includes() {
+    public function includes()
+    {
 
-      if( !defined( 'WPMDBUG_PATH' ) ) {
+      if (!defined('WPMDBUG_PATH')) {
 			  define( 'WPMDBUG_PATH', plugin_dir_path( __FILE__ ) );
 		  }
 
@@ -36,11 +39,12 @@ if( !class_exists( 'WPMailDebugger' ) ) {
     }
 
     /**
-     *Returns true if the debugger is enabled in the plugin's settings.
-     *@since 1.0.0
-     *@return boolean
+     * Returns true if the debugger is enabled in the plugin's settings.
+     * @since 1.0.0
+     * @return boolean
      */
-    public static function doEnforce() {
+    public static function doEnforce()
+    {
       $enforce = get_option('WPMDBUG_enabled', FALSE);
       if ($enforce) {
         return TRUE;
@@ -54,17 +58,18 @@ if( !class_exists( 'WPMailDebugger' ) ) {
      *@since 1.0.0
      *@return boolean
      */
-    public static function contextualSwitch() {
+    public static function contextualSwitch()
+    {
       $scope = get_option("WPMDBUG_plugins", array());
 
       if (is_array($scope) && count($scope) > 0) {
         // A switch depends on selected plugins
         $trace = debug_backtrace();
 
-        foreach($scope as $sco) {
+        foreach ($scope as $sco) {
           $plugin_filename = str_replace('\\', '/', WP_PLUGIN_DIR . '/' . $sco);
 
-          foreach($trace as $call) {
+          foreach ($trace as $call) {
             if (isset($call['file'])) {
               if ($plugin_filename == str_replace('\\', '/', $call['file']) || stripos($call['file'], dirname($plugin_filename)) !== FALSE) {
                 return TRUE;
@@ -78,7 +83,8 @@ if( !class_exists( 'WPMailDebugger' ) ) {
       }
     }
 
-    public static function filterEmail( $args ) {
+    public static function filterEmail( $args )
+    {
       $to_address = get_option('WPMDBUG_email', get_bloginfo('admin_email'));
       $original = $args['to'];
 
@@ -93,10 +99,11 @@ if( !class_exists( 'WPMailDebugger' ) ) {
 
   }
 
-  function WPMDBUG_start() {
+  function WPMDBUG_start()
+  {
     return WPMailDebugger::instantiate();
   }
 
   WPMDBUG_start();
 
-}
+endif;
