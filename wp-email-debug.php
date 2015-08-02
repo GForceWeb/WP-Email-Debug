@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WP E-Mail Debug
- * Plugin URI: https://github.com/GForceWeb/WP-Email-Debug
+ * Plugin URI: https://wordpress.org/plugins/wp-email-debug
  * Description: Never accidentally send users emails from your testing sites again!
  * Version: 1.0.0
  * Author: Grant Derepas
