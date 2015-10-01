@@ -1,7 +1,8 @@
 <?php
 $WPMDBUGerror;
-if ( WPMailDebugger::doEnforce() ) {
-  add_filter( 'wp_mail', array('WPMailDebugger', 'filterEmail') );
+if (WPMailDebugger::doEnforce())
+{
+  add_filter('wp_mail', array('WPMailDebugger', 'filterEmail'));
 }
 
 add_action('admin_menu', 'WPMDBUG_settings_menu');
@@ -10,7 +11,13 @@ add_action('admin_notices', 'WPMDBUG_admin_notices');
 add_action('admin_bar_menu', 'WPMDBUG_toolbar_link', 999);
 add_action('admin_print_scripts', 'WPMDBUG_css');
 
-function WPMDBUG_css(){
+/**
+ * Display CSS to make the toolbar notification text red.
+ * @since 1.0.0
+ * @return void
+ **/
+function WPMDBUG_css()
+{
 	?>
   <style type="text/css">
   #wp-admin-bar-WPMDBUG-toolbar .ab-item {color:red !important;}
@@ -18,8 +25,14 @@ function WPMDBUG_css(){
   <?php
 }
 
-
-function WPMDBUG_toolbar_link( $wp_admin_bar ) {
+/**
+ * Show a link to the WP Email Debug settings page in the toolbar indicating
+ * the debugging functionality is enabled.
+ * @since 1.0.0
+ * @return void
+ **/
+function WPMDBUG_toolbar_link($wp_admin_bar)
+{
   if (WPMailDebugger::doEnforce()) {
   	$args = array(
   		'id'    => 'WPMDBUG-toolbar',
@@ -30,15 +43,33 @@ function WPMDBUG_toolbar_link( $wp_admin_bar ) {
   }
 }
 
-function WPMDBUG_settings_menu() {
+/**
+ * Add the WP Email Debug settings page to the options menu.
+ * @since 1.0.0
+ * @return void
+ **/
+function WPMDBUG_settings_menu()
+{
 	add_options_page('E-Mail Debugger', 'E-Mail Debugger', 'manage_options', 'wpmdbug', 'WPMDBUG_settings_page');
 }
 
-function WPMDBUG_settings_page() {
+/**
+ * Show the settings page.
+ * @since 1.0.0
+ * @return void
+ **/
+function WPMDBUG_settings_page()
+{
   require_once WPMDBUG_PATH . 'settings.php';
 }
 
-function WPMDBUG_handle_settings() {
+/**
+ * Process posted data from the settings page.
+ * @since 1.0.0
+ * @return void
+ **/
+function WPMDBUG_handle_settings()
+{
   global $WPMDBUGerror;
   if (isset($_POST['wpmdbug_submit'])) {
 
@@ -63,7 +94,7 @@ function WPMDBUG_handle_settings() {
       if (isset($_POST['targetplugins']) && is_array($_POST['targetplugins']) && count($_POST['targetplugins']) > 0) {
         update_option('WPMDBUG_plugins', $_POST['targetplugins']);
       } else {
-        $WPMDBUGerror = "You need to select at least one plugin for the plugin-specific redirect";
+        $WPMDBUGerror = 'You need to select at least one plugin for the plugin-specific redirect';
       }
     } else {
       update_option('WPMDBUG_plugins', array());
@@ -72,7 +103,13 @@ function WPMDBUG_handle_settings() {
   }
 }
 
-function WPMDBUG_admin_notices() {
+/**
+ * Add error messages to admin notices.
+ * @since 1.0.0
+ * @return void
+ **/
+function WPMDBUG_admin_notices()
+{
   global $WPMDBUGerror;
   if (!empty($WPMDBUGerror)) {
     ?>

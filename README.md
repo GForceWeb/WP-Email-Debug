@@ -23,7 +23,7 @@ Generally speaking, Yes, but. This plugin catches all emails sent using the wp_m
 
 ## Credits
 
-Original Plugin Designed and Developed by [Grant Derepas](http://g-force.net) & [Jarred Kennedy](https://www.freelancer.com/u/JarredKennedy.html)
+Original Plugin Designed and Developed by [Grant Derepas](http://g-force.net) & Jarred Kennedy
 
 ## License
 
