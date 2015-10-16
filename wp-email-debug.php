@@ -85,13 +85,40 @@ if (!class_exists('WPMailDebugger')):
 
     public static function filterEmail( $args )
     {
-      $to_address = get_option('WPMDBUG_email', get_bloginfo('admin_email'));
-      $original = $args['to'];
+      $isHtml  = isset( $args['html'] );
+      $prefix  = '';
+      $message = $isHtml ? $args['html'] : $args['message'];
 
-      if (self::contextualSwitch()) {
-        $args['to'] = $to_address;
-        $args['subject'] = '[DEBUG] ' . $args['subject'];
-        $args['message'] = "Originally intended to be sent to " . $original . "\n" . $args['message'];
+      if ( self::contextualSwitch() ) {
+
+        // Prefix message
+        $prefix = sprintf(
+          __( 'Originally intended to be sent to %s', 'wp-email-debug' ),
+          $args['to']
+        );
+
+        if ( ! empty( $prefix ) ) {
+          $prefix = $prefix . ( $isHtml ? '<br>' : '\n' );
+        }
+
+        // Update email to address
+        $args['to'] = get_option( 'WPMDBUG_email', get_bloginfo( 'admin_email' ) );
+
+        // Update email subject
+        $args['subject'] = sprintf(
+          __( '[DEBUG] %s', 'wp-email-debug' ),
+          $args['subject']
+        );
+
+      }
+
+      $message = $prefix . $message;
+
+      if ( $isHtml ) {
+        $args['html'] = $message;
+      }
+      else {
+        $args['message'] = $message;
       }
 
       return $args;
