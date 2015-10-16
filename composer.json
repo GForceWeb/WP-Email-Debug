@@ -1,5 +1,5 @@
 {
-  "name": "GForceWeb/WP-Email-Debug",
+  "name": "gforceweb/wp-email-debug",
   "type": "wordpress-plugin",
   "license": "GPL",
   "description": "Never accidentally send users emails from your testing sites again!",
