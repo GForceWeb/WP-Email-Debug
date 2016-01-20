@@ -79,36 +79,37 @@ function WPMDBUG_settings_page() {
 function WPMDBUG_handle_settings() {
 	global $WPMDBUGerror;
 
-	if ( isset( $_POST[ 'wpmdbug_submit' ] ) ) {
-
-		if ( isset( $_POST[ 'wpmdbug_enabled' ] ) ) {
-			update_option( 'WPMDBUG_enabled', true );
-		} else {
-			update_option( 'WPMDBUG_enabled', false );
-		}
-
-		$newEmail = $_POST[ 'wpmdbug_sendto' ];
-		$newEmail = filter_var( $newEmail, FILTER_VALIDATE_EMAIL );
-
-		if ( $newEmail === false ) {
-			$WPMDBUGerror = 'Invalid Email Address';
-		} else {
-			update_option( 'WPMDBUG_email', $newEmail);
-		}
-
-		$debug_scope = $_POST[ 'wpmdbug_scope' ];
-
-		if ($debug_scope == 2) {
-			if ( isset($_POST[ 'targetplugins' ] ) && is_array( $_POST[ 'targetplugins' ] ) && count( $_POST[ 'targetplugins' ] ) > 0 ) {
-				update_option( 'WPMDBUG_plugins', $_POST[ 'targetplugins' ] );
-			} else {
-				$WPMDBUGerror = 'You need to select at least one plugin for the plugin-specific redirect';
-			}
-		} else {
-			update_option( 'WPMDBUG_plugins', array() );
-		}
-
+	if ( ! isset( $_POST[ 'wpmdbug_submit' ] ) ) {
+		return;
 	}
+
+	if ( isset( $_POST[ 'wpmdbug_enabled' ] ) ) {
+		update_option( 'WPMDBUG_enabled', true );
+	} else {
+		update_option( 'WPMDBUG_enabled', false );
+	}
+
+	$newEmail = $_POST[ 'wpmdbug_sendto' ];
+	$newEmail = filter_var( $newEmail, FILTER_VALIDATE_EMAIL );
+
+	if ( $newEmail === false ) {
+		$WPMDBUGerror = 'Invalid Email Address';
+	} else {
+		update_option( 'WPMDBUG_email', $newEmail);
+	}
+
+	$debug_scope = $_POST[ 'wpmdbug_scope' ];
+
+	if ( $debug_scope === 2 ) {
+		if ( isset( $_POST[ 'targetplugins' ] ) && is_array( $_POST[ 'targetplugins' ] ) && count( $_POST[ 'targetplugins' ] ) > 0 ) {
+			update_option( 'WPMDBUG_plugins', $_POST[ 'targetplugins' ] );
+		} else {
+			$WPMDBUGerror = 'You need to select at least one plugin for the plugin-specific redirect';
+		}
+	} else {
+		update_option( 'WPMDBUG_plugins', array() );
+	}
+
 }
 
 /**
