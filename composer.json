@@ -1,0 +1,22 @@
+{
+  "name": "gforceweb/wp-email-debug",
+  "type": "wordpress-plugin",
+  "license": "GPL",
+  "description": "Never accidentally send users emails from your testing sites again!",
+  "homepage": "https://wordpress.org/plugins/wp-email-debug",
+  "authors": [
+    {
+      "name": "Grant Derepas",
+      "homepage": "https://www.g-force.net"
+    }
+  ],
+  "keywords": [
+    "wordpress"
+  ],
+  "support": {
+    "issues": "https://github.com/GForceWeb/WP-Email-Debug/issues"
+  },
+  "require-dev": {
+    "dangoodman/composer-for-wordpress": "^1.0"
+  }
+}

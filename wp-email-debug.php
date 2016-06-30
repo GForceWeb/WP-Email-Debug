@@ -8,102 +8,122 @@
  * Author URI: https://www.g-force.net
  */
 
-if (!defined('ABSPATH')) {
-  exit();
+if ( ! defined( 'ABSPATH' ) ) {
+	exit();
 }
 
-if (!class_exists('WPMailDebugger')):
+if ( ! class_exists( 'WPMailDebugger' ) ) {
 
-  final class WPMailDebugger
-  {
+	final class WPMailDebugger {
 
-    private static $instance;
+		private static $instance;
 
-    public static function instantiate()
-    {
-  		if (!isset(self::$instance) && !self::$instance instanceof WPMailDebugger) {
-  			self::$instance = new WPMailDebugger;
-  			self::$instance->includes();
-  		}
-  		return self::$instance;
-    }
+		public static function instantiate() {
+			if ( ! isset( self::$instance ) && ! self::$instance instanceof WPMailDebugger ) {
+				self::$instance = new WPMailDebugger;
+				self::$instance->includes();
+			}
+			return self::$instance;
+		}
 
-    public function includes()
-    {
+		public function includes() {
 
-      if (!defined('WPMDBUG_PATH')) {
-			  define( 'WPMDBUG_PATH', plugin_dir_path( __FILE__ ) );
-		  }
+			if ( ! defined( 'WPMDBUG_PATH' ) ) {
+				define( 'WPMDBUG_PATH', plugin_dir_path( __FILE__ ) );
+			}
 
-      require_once WPMDBUG_PATH . 'hooks.php';
-    }
+			require_once WPMDBUG_PATH . 'hooks.php';
+		}
 
-    /**
-     * Returns true if the debugger is enabled in the plugin's settings.
-     * @since 1.0.0
-     * @return boolean
-     */
-    public static function doEnforce()
-    {
-      $enforce = get_option('WPMDBUG_enabled', FALSE);
-      if ($enforce) {
-        return TRUE;
-      } else {
-        return FALSE;
-      }
-    }
+		/**
+		 * Returns true if the debugger is enabled in the plugin's settings.
+		 *
+		 * @since 1.0.0
+		 * @return boolean
+		 */
+		public static function doEnforce() {
+			return apply_filters( 'wp_email_debug_enabled', get_option( 'WPMDBUG_enabled', false ) );
+		}
 
-    /**
-     *Returns true if a switch of the email address should be performed, else false.
-     *@since 1.0.0
-     *@return boolean
-     */
-    public static function contextualSwitch()
-    {
-      $scope = get_option("WPMDBUG_plugins", array());
+		/**
+		 * Returns true if a switch of the email address should be performed, else false.
+		 *
+		 * @since 1.0.0
+		 * @return boolean
+		 */
+		public static function contextualSwitch() {
 
-      if (is_array($scope) && count($scope) > 0) {
-        // A switch depends on selected plugins
-        $trace = debug_backtrace();
+			$scope = get_option( 'WPMDBUG_plugins', array() );
 
-        foreach ($scope as $sco) {
-          $plugin_filename = str_replace('\\', '/', WP_PLUGIN_DIR . '/' . $sco);
+			if ( is_array( $scope ) && count( $scope ) > 0 ) {
 
-          foreach ($trace as $call) {
-            if (isset($call['file'])) {
-              if ($plugin_filename == str_replace('\\', '/', $call['file']) || stripos($call['file'], dirname($plugin_filename)) !== FALSE) {
-                return TRUE;
-              }
-            }
-          }
-        }
-        return FALSE;
-      } else {
-        return TRUE;
-      }
-    }
+				// A switch depends on selected plugins
+				$trace = debug_backtrace();
 
-    public static function filterEmail( $args )
-    {
-      $to_address = get_option('WPMDBUG_email', get_bloginfo('admin_email'));
-      $original = $args['to'];
+				foreach ( $scope as $sco ) {
+					$plugin_filename = str_replace( '\\', '/', WP_PLUGIN_DIR . '/' . $sco );
 
-      if (self::contextualSwitch()) {
-        $args['to'] = $to_address;
-        $args['subject'] = '[DEBUG] ' . $args['subject'];
-        $args['message'] = "Originally intended to be sent to " . $original . "\n" . $args['message'];
-      }
+					foreach ( $trace as $call ) {
+						if ( isset( $call[ 'file' ] ) ) {
+							if ( $plugin_filename == str_replace( '\\', '/', $call[ 'file' ] ) || stripos( $call[ 'file' ], dirname( $plugin_filename ) ) !== false ) {
+								return true;
+							}
+						}
+					}
+				}
 
-      return $args;
-    }
+				return false;
+			}
 
-  }
+			return true;
+		}
 
-  function WPMDBUG_start()
-  {
-    return WPMailDebugger::instantiate();
-  }
+		public static function filterEmail( $args ) {
+			$isHtml  = isset( $args[ 'html' ] );
+			$prefix  = '';
+			$message = $isHtml ? $args[ 'html' ] : $args[ 'message' ];
 
-  WPMDBUG_start();
+			if ( self::contextualSwitch() ) {
 
-endif;
+				// Prefix message
+				$prefix = sprintf(
+					__( 'Originally intended to be sent to %s', 'wp-email-debug' ),
+					$args[ 'to' ]
+				);
+
+				if ( ! empty( $prefix ) ) {
+					$prefix = $prefix . ( $isHtml ? '<br>' : '\n' );
+				}
+
+				// Update email to address
+				$args[ 'to' ] = get_option( 'WPMDBUG_email', get_bloginfo( 'admin_email' ) );
+
+				// Update email subject
+				$args[ 'subject' ] = sprintf(
+					__( '[DEBUG] %s', 'wp-email-debug' ),
+					$args[ 'subject' ]
+				);
+
+			}
+
+			$message = $prefix . $message;
+
+			if ( $isHtml ) {
+				$args[ 'html' ] = $message;
+			}
+			else {
+				$args[ 'message' ] = $message;
+			}
+
+			return $args;
+		}
+
+	}
+
+	function WPMDBUG_start() {
+		return WPMailDebugger::instantiate();
+	}
+
+	WPMDBUG_start();
+
+}
